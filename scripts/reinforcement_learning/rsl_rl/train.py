@@ -97,7 +97,14 @@ from isaaclab.envs import (
 from isaaclab.utils.dict import print_dict
 from isaaclab.utils.io import dump_yaml
 
-from isaaclab_rl.rsl_rl import RslRlBaseRunnerCfg, RslRlVecEnvWrapper, handle_deprecated_rsl_rl_cfg
+try:  # IsaacLab (main) provides this compatibility helper
+    from isaaclab_rl.rsl_rl import RslRlBaseRunnerCfg, RslRlVecEnvWrapper, handle_deprecated_rsl_rl_cfg
+except ImportError:  # IsaacLab <= v2.3.2 does not provide it
+    from isaaclab_rl.rsl_rl import RslRlBaseRunnerCfg, RslRlVecEnvWrapper
+
+    def handle_deprecated_rsl_rl_cfg(agent_cfg, installed_version):
+        """Fallback for IsaacLab versions that do not ship the deprecated-config helper."""
+        return agent_cfg
 
 from isaaclab_tasks.utils import get_checkpoint_path
 from isaaclab_tasks.utils.hydra import hydra_task_config
